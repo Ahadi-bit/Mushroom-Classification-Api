@@ -28,8 +28,8 @@ class MushroomFeatureIN(BaseModel):
     habitat: int
 
 
-api = FastAPI()
-api.add_middleware(
+app = FastAPI()
+app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
@@ -45,7 +45,7 @@ correlation_pickle = open("pickle/correlation.pkl", "rb")
 correlation = pickle.load(correlation_pickle)
 
 
-@api.post('/predict')
+@app.post('/predict')
 def predict(incoming_data: MushroomFeatureIN):
     data = incoming_data.dict()
     data = pd.DataFrame(data, index=[0])
@@ -65,11 +65,12 @@ def predict(incoming_data: MushroomFeatureIN):
     return prediction, not_edible, edible
 
 
-@api.get('/correlation')
+@app.get('/correlation')
 def report():
 
     return correlation
 
 
 if __name__ == '__main__':
-    uvicorn.run(api, host='127.0.0.1', port=8000)
+    uvicorn.run(app, host='127.0.0.1', port=8000)
+# cd
