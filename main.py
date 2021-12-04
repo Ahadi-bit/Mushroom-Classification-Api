@@ -45,6 +45,12 @@ correlation_pickle = open("pickle/correlation.pkl", "rb")
 correlation = pickle.load(correlation_pickle)
 
 
+
+@app.get("/")
+def hello():
+    return {"message":"Hello World"}
+
+
 @app.post('/predict')
 def predict(incoming_data: MushroomFeatureIN):
     data = incoming_data.dict()
