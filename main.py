@@ -59,10 +59,10 @@ def predict(incoming_data: MushroomFeatureIN):
     temp = temp.reshape(1, -1)
     prediction = classifier.predict(temp)
     confidence = classifier.predict_proba(temp)
-    not_edible = "{:.0%}".format(confidence[0][0])
-    edible = "{:.0%}".format(confidence[0][1])
+    not_edible = round(confidence[0][0]*100)
+    edible = round(confidence[0][1]*100)
 
-    print(prediction[0])
+    print(confidence[0][1])
     if prediction[0] == 0:
         prediction = "Edible Mushroom"
     else:
@@ -77,6 +77,6 @@ def report():
     return correlation
 
 
-# if __name__ == '__main__':
-#     uvicorn.run(app, host='127.0.0.1', port=8000)
+if __name__ == '__main__':
+    uvicorn.run(app, host='127.0.0.1', port=8000)
 # cd
