@@ -48,7 +48,7 @@ correlation = pickle.load(correlation_pickle)
 
 @app.get("/")
 def hello():
-    return {"message":"Hello World"}
+    return {"welcome":"Welcome to the mushroom classification api!"}
 
 
 @app.post('/predict')
