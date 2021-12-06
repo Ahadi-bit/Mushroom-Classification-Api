@@ -77,6 +77,20 @@ def report():
     return correlation
 
 
+data = pd.read_csv('data/mushrooms.csv')
+
+@app.get("/balance/{feature}")
+def balance(feature: str):
+    balance = {}
+
+    if feature in data:
+        balance = data.reset_index().groupby(feature).apply(lambda x : x['class'].value_counts().to_dict()).to_dict()
+    else:
+        balance = {"error":"Item does not exist"}
+          
+    return balance
+
+
 if __name__ == '__main__':
     uvicorn.run(app, host='127.0.0.1', port=8000)
 # cd
