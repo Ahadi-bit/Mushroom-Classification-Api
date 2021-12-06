@@ -4,7 +4,7 @@ import pickle
 import pandas as pd
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
-
+import numpy as np
 
 origins = ['*']
 
@@ -90,6 +90,15 @@ def balance(feature: str):
           
     return balance
 
+@app.get("/population")
+def population():
+    populations = data['population'].value_counts().to_dict()    
+    
+    pop_labels = {'v':'Several', 'y':'Solitary', 's':'Scattered', 'n':'Numerous', 'a':'Abundant', 'c':'Clustered'}
+
+    label_population = dict((pop_labels[key], value) for (key, value) in populations.items())
+    
+    return label_population
 
 if __name__ == '__main__':
     uvicorn.run(app, host='127.0.0.1', port=8000)
