@@ -9,6 +9,8 @@ import numpy as np
 origins = ['*']
 
 
+
+# Base model for API
 class MushroomFeatureIN(BaseModel):
     capSurface: int
     bruises: int
@@ -27,8 +29,32 @@ class MushroomFeatureIN(BaseModel):
     population: int
     habitat: int
 
+description = """
+Mushroom Classification API helps you do awesome stuff. 🚀
 
-app = FastAPI()
+## Predict
+
+Classifies mushroom as posionous or edible.
+
+## Correlation
+
+Pulls correlation of mushroom features based on target variables
+
+## Balance
+Returns the distribution of mushroom features and there count on edible and poisonous
+
+## Population
+Pulls the population distribution accross the data.
+
+"""
+
+app = FastAPI(
+    title="Mushroom Classification API",
+    description=description,
+    version="0.0.1"
+)
+
+#cors middle cors needed to create get and post request locally
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -38,19 +64,21 @@ app.add_middleware(
 )
 
 
+## Machine Learning Model
 classifier_pickle = open("pickle/classification-model.pkl", "rb")
 classifier = pickle.load(classifier_pickle)
 
+## Needed for the correlation chart
 correlation_pickle = open("pickle/correlation.pkl", "rb")
 correlation = pickle.load(correlation_pickle)
 
 
-
+# Entry Point of the api
 @app.get("/")
-def hello():
+def entry():
     return {"welcome":"Welcome to the mushroom classification api!"}
 
-
+# prediction api
 @app.post('/predict')
 def predict(incoming_data: MushroomFeatureIN):
     data = incoming_data.dict()
@@ -70,15 +98,16 @@ def predict(incoming_data: MushroomFeatureIN):
 
     return prediction, not_edible, edible
 
-
+# correlation api
 @app.get('/correlation')
 def report():
 
     return correlation
 
-
+## Data
 data = pd.read_csv('data/mushrooms.csv')
 
+## Balance API
 @app.get("/balance/{feature}")
 def balance(feature: str):
     balance = {}
@@ -90,6 +119,7 @@ def balance(feature: str):
           
     return balance
 
+## Population API
 @app.get("/population")
 def population():
     populations = data['population'].value_counts().to_dict()    
@@ -100,6 +130,6 @@ def population():
     
     return label_population
 
+## Enables the ability to run locally 
 if __name__ == '__main__':
     uvicorn.run(app, host='127.0.0.1', port=8000)
-# cd
