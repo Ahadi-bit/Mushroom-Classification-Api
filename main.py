@@ -89,12 +89,19 @@ def predict(incoming_data: MushroomFeatureIN):
     confidence = classifier.predict_proba(temp)
     not_edible = round(confidence[0][0]*100)
     edible = round(confidence[0][1]*100)
-
+    
+    
     print(confidence[0][1])
     if prediction[0] == 0:
         prediction = "Edible Mushroom"
+        data['class'] = prediction
+        data.to_csv('data/output.csv',mode='a', header=False)
+
+
     else:
         prediction = "Poisonous Mushroom"
+        data['class'] = prediction
+        data.to_csv('data/output.csv',mode='a', header=False)
 
     return prediction, not_edible, edible
 
